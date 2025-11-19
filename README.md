@@ -1,8 +1,15 @@
 # Comibyte PHP Framework
 
-<p align="center">
-  <img src="https://imgs.search.brave.com/a2QJ4QGpzGpXeDGHk1c-pL3FdZ-v47YnUIxeu4pjCe4/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9vbHV3/YWRpbXUtYWRlZGVq/aS53ZWIuYXBwL2lt/YWdlcy9sb2dvLnBu/Zw" alt="Comibyte Welcome Page" width="700">
-</p>
+<div align="center">
+  <img src="https://i.imgur.com/your-image-url.png" alt="Comibyte Welcome Page" width="700">
+  <img src="https://imgs.search.brave.com/a2QJ4QGpzGpXeDGHk1c-pL3FdZ-v47YnUIxeu4pjCe4/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9vbHV3/YWRpbXUtYWRlZGVq/aS53ZWIuYXBwL2lt/YWdlcy9sb2dvLnBu/Zw" alt="Comibyte Welcome Page" width="400">
+  <br>
+  <p>
+    <img src="https://img.shields.io/badge/PHP-8.2%2B-blue?style=for-the-badge&logo=php" alt="PHP Version">
+    <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
+    <img src="https://img.shields.io/badge/Status-In%20Development-orange?style=for-the-badge" alt="Status">
+  </p>
+</div>
 
 Welcome to the Comibyte PHP Framework! A lightweight, modern, and intuitive mini-framework designed for rapid development of PHP applications. It provides a solid foundation with essential tools like a powerful router, a simple view engine, and a rich set of helper functions, allowing you to build elegant applications with minimal setup.
 
@@ -12,32 +19,33 @@ This framework is inspired by the simplicity and elegance of frameworks like Lar
 
 ## Table of Contents
 
-- [Core Features](#core-features)
+- [Core Features](#features)
 - [Installation](#installation)
-- [Project Structure](#project-structure)
-- [Core Concepts](#core-concepts)
+- [Project Structure](#structure)
+- [Core Concepts](#concepts)
   - [Routing](#routing)
   - [Controllers](#controllers)
   - [Middleware](#middleware)
   - [Views](#views)
-  - [Models & Database](#models--database)
+  - [Models & Database](#models)
   - [CSRF Protection](#csrf-protection)
-  - [Email Service](#email-service)
-- [Helper Functions Guide](#helper-functions-guide)
+  - [Email Service](#email)
+- [Helper Functions Guide](#helpers)
   - [Debugging](#debugging)
-  - [Configuration & Paths](#configuration--paths)
-  - [URL & Assets](#url--assets)
-  - [Request & Response](#request--response)
-  - [Session & Forms](#session--forms)
+  - [Configuration & Paths](#paths)
+  - [URL & Assets](#urls)
+  - [Request & Response](#requests)
+  - [Session & Forms](#sessions)
   - [Security](#security)
-  - [Content & Strings](#content--strings)
+  - [Content & Strings](#strings)
   - [Arrays](#arrays)
-- [Contributing](#contributing)
+- [Contributing](#contribute)
 - [License](#license)
 
 ---
 
-## Core Features
+<a name="features"></a>
+## ✨ Core Features
 
 - **Elegant Routing Engine**: Define clean, simple routes for your application.
 - **Controller Support**: Organize your code with MVC-style controllers.
@@ -46,58 +54,60 @@ This framework is inspired by the simplicity and elegance of frameworks like Lar
 - **Rich Helper Library**: A comprehensive set of helper functions to speed up common tasks.
 - **Environment Configuration**: Uses `.env` files for easy management of application configuration.
 - **CSRF Protection**: Built-in helpers to protect your forms from cross-site request forgery.
-- **Integrated Mailer**: Send emails easily using PHPMailer.
+- **Integrated Mailer**: A simple wrapper around PHPMailer to send emails easily.
 - **JSON Responses**: Simple helpers for building APIs.
 
+<a name="installation"></a>
 ## Requirements
 
 - PHP >= 7.4
 - Composer
 - A local web server (e.g., Apache, Nginx) or PHP's built-in server.
 
-## Installation
+### 🚀 Installation
 
-1.  **Clone the repository:**
+1.  **Clone the Repository:**
     ```bash
-    git clone https://github.com/your-username/comibyte-framework.git
+    git clone https://github.com/ComibyteOrg/Comibyte-PHP-Framework.git
     cd comibyte-framework
     ```
 
-2.  **Install dependencies:**
+2.  **Install Dependencies:**
     This will install PHPMailer, DotEnv, and other necessary packages.
     ```bash
     composer install
     ```
 
-3.  **Set up your environment:**
+3.  **Set Up Your Environment:**
     -   Copy the `.env.example` file to a new file named `.env`. This file will hold your application secrets and environment-specific settings.
         ```bash
         cp .env.example .env
         ```
-    -   Open the `.env` file and configure your application settings, especially `APP_URL` and your mail server credentials.
+    -   Open the `.env` file and configure your application settings, especially `APP_URL` and your mail server credentials if you plan to send emails.
         ```ini
         # Application
         APP_NAME="Comibyte"
         APP_URL=http://localhost:8000
 
         # Mail Server
-        MAIL_HOST=smtp.example.com
-        MAIL_PORT=587
-        MAIL_USERNAME=your-email@example.com
-        MAIL_PASSWORD=your-email-password
-        MAIL_FROM_ADDRESS="hello@example.com"
+        MAIL_HOST=smtp.mailtrap.io
+        MAIL_PORT=2525
+        MAIL_USERNAME=your-mailtrap-username
+        MAIL_PASSWORD=your-mailtrap-password
+        MAIL_FROM_ADDRESS="hello@comibyte.com"
         MAIL_FROM_NAME="${APP_NAME}"
         ```
 
-4.  **Start the local development server:**
+4.  **Start the Local Development Server:**
     You can use PHP's built-in server for quick development.
     ```bash
     php -S localhost:8000 -t .
     ```
 
-Now, you can visit `http://localhost:8000` in your browser to see the welcome page.
+Now, visit `http://localhost:8000` in your browser to see the welcome page!
 
-## Project Structure
+<a name="structure"></a>
+## 📁 Project Structure
 
 ```
 ├── App/
@@ -285,4 +295,4 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 
 ## License
 
-The Comibyte PHP Framework is open-source software. Feel free to use it and adapt it for your own projects.#
+The Comibyte PHP Framework is open-source software. Feel free to use it and adapt it for your own projects.
