@@ -285,5 +285,6 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 
 ## License
 
-The Comibyte PHP Framework is open-source software. Feel free to use it and adapt it for your own projects.#   C o m i b y t e - P H P - F r a m e w o r k  
+The Comibyte PHP Framework is open-source software. Feel free to use it and adapt it for your own projects.#   C o m i b y t e - P H P - F r a m e w o r k 
+ 
  
