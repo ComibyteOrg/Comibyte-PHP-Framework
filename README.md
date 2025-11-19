@@ -1,8 +1,7 @@
 # Comibyte PHP Framework
 
 <div align="center">
-  <img src="https://i.imgur.com/your-image-url.png" alt="Comibyte Welcome Page" width="700">
-  <img src="https://imgs.search.brave.com/a2QJ4QGpzGpXeDGHk1c-pL3FdZ-v47YnUIxeu4pjCe4/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9vbHV3/YWRpbXUtYWRlZGVq/aS53ZWIuYXBwL2lt/YWdlcy9sb2dvLnBu/Zw" alt="Comibyte Welcome Page" width="400">
+  <img src="https://imgs.search.brave.com/a2QJ4QGpzGpXeDGHk1c-pL3FdZ-v47YnUIxeu4pjCe4/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9vbHV3/YWRpbXUtYWRlZGVq/aS53ZWIuYXBwL2lt/YWdlcy9sb2dvLnBu/Zw" alt="Comibyte Welcome Page" width="300">
   <br>
   <p>
     <img src="https://img.shields.io/badge/PHP-8.2%2B-blue?style=for-the-badge&logo=php" alt="PHP Version">
@@ -143,11 +142,13 @@ All web routes are defined in `routes/web.php`. The router supports basic HTTP v
 ```php
 // routes/web.php
 use App\Router\Route;
+use App\Controller\HomeController;
 use function App\Router\view;
 
 Route::get('/', function () {
     return view('home');
 });
+Route::get('/', [HomeController::class, 'show']);
 ```
 
 **Route with Parameters:**
@@ -296,3 +297,4 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 ## License
 
 The Comibyte PHP Framework is open-source software. Feel free to use it and adapt it for your own projects.
+
