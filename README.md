@@ -1,4 +1,4 @@
-# Comibyte PHP Framework
+# Comibyte PHP Mini Framework
 
 <div align="center">
   <img src="https://imgs.search.brave.com/a2QJ4QGpzGpXeDGHk1c-pL3FdZ-v47YnUIxeu4pjCe4/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9vbHV3/YWRpbXUtYWRlZGVq/aS53ZWIuYXBwL2lt/YWdlcy9sb2dvLnBu/Zw" alt="Comibyte Welcome Page" width="300">
@@ -10,7 +10,7 @@
   </p>
 </div>
 
-Welcome to the Comibyte PHP Framework! A lightweight, modern, and intuitive mini-framework designed for rapid development of PHP applications. It provides a solid foundation with essential tools like a powerful router, a simple view engine, and a rich set of helper functions, allowing you to build elegant applications with minimal setup.
+Welcome to the Comibyte PHP Mini Framework! A lightweight, modern, and intuitive mini-framework designed for rapid development of PHP applications. It provides a solid foundation with essential tools like a powerful router, a simple view engine, database abstraction, middleware support, and a rich set of helper functions, allowing you to build elegant applications with minimal setup.
 
 This framework is inspired by the simplicity and elegance of frameworks like Laravel, aiming to provide a productive and enjoyable development experience.
 
@@ -19,25 +19,21 @@ This framework is inspired by the simplicity and elegance of frameworks like Lar
 ## Table of Contents
 
 - [Core Features](#features)
+- [Requirements](#requirements)
 - [Installation](#installation)
 - [Project Structure](#structure)
 - [Core Concepts](#concepts)
+  - [Entry Point and Bootstrap](#entry-point)
   - [Routing](#routing)
   - [Controllers](#controllers)
+    - [Input Sanitization](#sanitize)
   - [Middleware](#middleware)
   - [Views](#views)
   - [Models & Database](#models)
   - [CSRF Protection](#csrf-protection)
   - [Email Service](#email)
-- [Helper Functions Guide](#helpers)
-  - [Debugging](#debugging)
-  - [Configuration & Paths](#paths)
-  - [URL & Assets](#urls)
-  - [Request & Response](#requests)
-  - [Session & Forms](#sessions)
-  - [Security](#security)
-  - [Content & Strings](#strings)
-  - [Arrays](#arrays)
+  - [Helper Functions](#helpers)
+- [Usage Examples](#examples)
 - [Contributing](#contribute)
 - [License](#license)
 
@@ -46,24 +42,28 @@ This framework is inspired by the simplicity and elegance of frameworks like Lar
 <a name="features"></a>
 ## ✨ Core Features
 
-- **Elegant Routing Engine**: Define clean, simple routes for your application.
+- **Elegant Routing Engine**: Define clean, simple routes with parameter support and middleware.
 - **Controller Support**: Organize your code with MVC-style controllers.
-- **Middleware Support**: Protect your routes with middleware for authentication, logging, and more.
-- **Simple View Engine**: Easily render PHP views with data.
-- **Rich Helper Library**: A comprehensive set of helper functions to speed up common tasks.
+- **Middleware System**: Protect your routes with authentication, guest-only, and custom middleware.
+- **Simple View Engine**: Easily render PHP views with data passing.
+- **Database Abstraction**: Support for MySQL, SQLite, and PostgreSQL with query builder.
+- **Rich Helper Library**: A comprehensive set of helper functions for common tasks.
 - **Environment Configuration**: Uses `.env` files for easy management of application configuration.
 - **CSRF Protection**: Built-in helpers to protect your forms from cross-site request forgery.
 - **Integrated Mailer**: A simple wrapper around PHPMailer to send emails easily.
-- **JSON Responses**: Simple helpers for building APIs.
+- **JSON API Support**: Simple helpers for building RESTful APIs.
+- **Input Sanitization**: Robust input sanitization to prevent XSS and other attacks.
 
-<a name="installation"></a>
+<a name="requirements"></a>
 ## Requirements
 
-- PHP >= 7.4
+- PHP >= 8.2
 - Composer
 - A local web server (e.g., Apache, Nginx) or PHP's built-in server.
+- Database (MySQL, SQLite, or PostgreSQL) - optional, depending on your needs.
 
-### 🚀 Installation
+<a name="installation"></a>
+## 🚀 Installation
 
 1.  **Clone the Repository:**
     ```bash
@@ -88,6 +88,18 @@ This framework is inspired by the simplicity and elegance of frameworks like Lar
         APP_NAME="Comibyte"
         APP_URL=http://localhost:8000
 
+        # Database (choose one)
+        DB_CONNECTION=sqlite
+        DB_DATABASE=database/db.sqlite
+
+        # Or for MySQL/PostgreSQL:
+        # DB_CONNECTION=mysql
+        # DB_HOST=127.0.0.1
+        # DB_PORT=3306
+        # DB_DATABASE=your_database
+        # DB_USERNAME=your_username
+        # DB_PASSWORD=your_password
+
         # Mail Server
         MAIL_HOST=smtp.mailtrap.io
         MAIL_PORT=2525
@@ -110,191 +122,461 @@ Now, visit `http://localhost:8000` in your browser to see the welcome page!
 
 ```
 ├── App/
+│   ├── Controller/
+│   │   └── HomeController.php      # Example controller with authentication logic
+│   ├── Database/
+│   │   ├── Connect.php             # Database connection utilities
+│   │   ├── DatabaseFactory.php     # Factory for creating database connections
+│   │   ├── DatabaseInterface.php   # Database interface contract
+│   │   ├── DatabaseQuery.php       # Query builder for CRUD operations
+│   │   ├── MySQLConnection.php     # MySQL database implementation
+│   │   ├── PostgreSQLConnection.php # PostgreSQL database implementation
+│   │   ├── SQLiteConnection.php    # SQLite database implementation
+│   │   └── db.sqlite               # SQLite database file
 │   ├── Helper/
-│   │   └── Helper.php      # Core helper functions
+│   │   ├── CSRF.php                # CSRF token generation
+│   │   ├── EmailService.php        # Email sending service using PHPMailer
+│   │   └── Helper.php              # Core helper functions including sanitize
 │   ├── Middleware/
-│   │   ├── AuthMiddleware.php
-│   │   └── GuestMiddleware.php
+│   │   ├── AuthMiddleware.php      # Authentication middleware
+│   │   └── GuestMiddleware.php     # Guest-only middleware
 │   ├── Model/
-│   │   └── Admin.php       # Example model
+│   │   └── (User.php, Admin.php)   # Models (currently referenced but not implemented)
 │   └── Router/
-│       └── Route.php       # The routing engine
+│       └── Route.php               # The routing engine
 ├── Resources/
-│   └── views/              # Your view files (.php)
+│   ├── css/
+│   ├── js/
+│   └── views/                      # PHP view files
 │       └── home.php
 ├── routes/
-│   └── web.php             # Web route definitions
-├── vendor/                 # Composer dependencies
-├── .env                    # Environment configuration
-├── .env.example            # Example environment file
-├── composer.json           # Composer dependency list
-├── index.php               # Application entry point
-└── README.md               # This file
+│   └── web.php                     # Web route definitions
+├── vendor/                         # Composer dependencies
+├── .env                            # Environment configuration
+├── .env.example                    # Example environment file
+├── composer.json                   # Composer dependency list
+├── index.php                       # Application entry point
+└── README.md                       # This file
 ```
 
+<a name="concepts"></a>
 ## Core Concepts
 
+<a name="entry-point"></a>
+### Entry Point and Bootstrap
+
+The application starts with `index.php`, which handles:
+
+- **Autoloading**: Uses Composer's autoloader and a custom fallback for App classes.
+- **Session Management**: Starts PHP sessions for user authentication.
+- **Error Reporting**: Enables error reporting in development.
+- **Route Setup**: Registers middleware aliases and includes route definitions.
+- **Dispatch**: Processes the incoming request and routes it to the appropriate handler.
+
+```php
+// index.php
+require __DIR__ . "/vendor/autoload.php";
+
+// Custom autoloader fallback
+spl_autoload_register(function ($class) {
+    $baseDir = __DIR__ . '/';
+    $file = $baseDir . str_replace('\\', '/', $class) . '.php';
+    if (file_exists($file)) {
+        require $file;
+    }
+});
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+use App\Router\Route;
+use App\Middleware\AuthMiddleware;
+use App\Middleware\GuestMiddleware;
+
+Route::setViewPath(__DIR__ . '/Resources/views');
+Route::registerMiddleware('auth', AuthMiddleware::class);
+Route::registerMiddleware('guest', GuestMiddleware::class);
+
+include __DIR__ . "/routes/web.php";
+Route::dispatch();
+```
+
+<a name="routing"></a>
 ### Routing
 
-All web routes are defined in `routes/web.php`. The router supports basic HTTP verbs.
+All web routes are defined in `routes/web.php`. The router supports HTTP verbs, route parameters, and middleware.
 
-**Basic GET Route:**
+**Basic Routes:**
 ```php
-// routes/web.php
 use App\Router\Route;
-use App\Controller\HomeController;
 use function App\Router\view;
 
 Route::get('/', function () {
     return view('home');
 });
-Route::get('/', [HomeController::class, 'show']);
+
+Route::post('/login', [HomeController::class, 'login']);
 ```
 
 **Route with Parameters:**
 ```php
 Route::get('/users/{id}', function ($id) {
-    // Logic to fetch user with $id
     return "User ID: " . $id;
+});
+
+Route::get('/posts/{id}/comments/{commentId}', function ($id, $commentId) {
+    return "Post ID: " . $id . ", Comment ID: " . $commentId;
 });
 ```
 
+**Routes with Middleware:**
+```php
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware('auth');
+
+Route::get('/login', function () {
+    return view('login');
+})->middleware('guest');
+```
+
+The `Route.php` class handles:
+- Route registration with method and path
+- Parameter extraction using regex
+- Middleware chaining
+- Request dispatching
+
+<a name="controllers"></a>
+### Controllers
+
+Controllers organize your application logic. They handle requests and return responses.
+
+**Example Controller (`App/Controller/HomeController.php`):**
+```php
+<?php
+namespace App\Controller;
+
+use App\Helper\Helper;
+
+class HomeController
+{
+    public function login()
+    {
+        $email = Helper::sanitize(Helper::request('email'));
+        $password = Helper::request('password');
+
+        // CSRF check
+        if (Helper::request('_token') !== Helper::csrf_token()) {
+            Helper::returnJson(['error' => 'Invalid CSRF token'], 419);
+            return;
+        }
+
+        // Authentication logic...
+    }
+}
+```
+
+<a name="sanitize"></a>
+#### Input Sanitization
+
+The framework provides a robust `sanitize()` function in `App/Helper/Helper.php` to prevent XSS attacks and clean user input.
+
+**How the `sanitize()` function works:**
+
+```php
+public static function sanitize($input)
+{
+    $input = trim($input ?? '');                    // Remove whitespace from beginning and end
+    $input = htmlspecialchars($input);              // Convert special characters to HTML entities
+    $input = stripcslashes($input);                 // Remove backslashes
+    $input = htmlentities(strip_tags($input));      // Convert to HTML entities and remove HTML tags
+
+    return $input;
+}
+```
+
+**Step-by-step explanation:**
+1. **`trim()`**: Removes leading and trailing whitespace, including spaces, tabs, and newlines.
+2. **`htmlspecialchars()`**: Converts special characters to HTML entities:
+   - `&` becomes `&amp;`
+   - `<` becomes `<`
+   - `>` becomes `>`
+   - `"` becomes `"`
+   - `'` becomes `&#039;`
+3. **`stripcslashes()`**: Removes backslashes that were added by magic quotes or user input.
+4. **`strip_tags()`**: Removes all HTML and PHP tags from the string.
+5. **`htmlentities()`**: Converts all applicable characters to HTML entities, providing an additional layer of protection.
+
+**Usage in Controllers:**
+```php
+$name = Helper::sanitize(Helper::request('name'));
+$email = Helper::sanitize(Helper::request('email'));
+$message = Helper::sanitize(Helper::request('message'));
+```
+
+This multi-layered approach ensures that user input is safe for display and prevents common XSS vulnerabilities while preserving the intended content.
+
+<a name="middleware"></a>
+### Middleware
+
+Middleware provides a mechanism for filtering HTTP requests. It's executed before the route handler.
+
+**Authentication Middleware (`App/Middleware/AuthMiddleware.php`):**
+```php
+<?php
+namespace App\Middleware;
+
+use App\Helper\Helper;
+
+class AuthMiddleware
+{
+    public function handle($params, $next)
+    {
+        if (!Helper::session('user_id')) {
+            echo Helper::redirect('/login');
+            return;
+        }
+        return $next($params);
+    }
+}
+```
+
+**Guest Middleware (`App/Middleware/GuestMiddleware.php`):**
+```php
+<?php
+namespace App\Middleware;
+
+use App\Helper\Helper;
+
+class GuestMiddleware
+{
+    public function handle($params, $next)
+    {
+        if (Helper::session('user_id')) {
+            echo Helper::redirect('/dashboard');
+            return;
+        }
+        return $next($params);
+    }
+}
+```
+
+Middleware is registered in `index.php` and applied to routes using the `middleware()` method.
+
+<a name="views"></a>
 ### Views
 
-Views are simple PHP files located in the `Resources/views` directory. You can render a view using the `view()` function.
+Views are PHP files located in `Resources/views/`. They render HTML with embedded PHP.
 
 **Rendering a View:**
 ```php
 Route::get('/', function () {
-    // Renders Resources/views/home.php
     return view('home');
 });
 ```
 
-**Passing Data to a View:**
+**Passing Data to Views:**
 ```php
-// In your route
 Route::get('/profile', function () {
     $user = ['name' => 'John Doe'];
     return view('profile', ['user' => $user]);
 });
-
-// In Resources/views/profile.php
-<h1>Welcome, <?php echo htmlspecialchars($user['name']); ?>!</h1>
 ```
 
-You can also use "dot" notation for views in subdirectories.
+**Dot Notation for Subdirectories:**
 ```php
-// Renders Resources/views/admin/dashboard.php
-return view('admin.dashboard');
+return view('admin.dashboard'); // Renders Resources/views/admin/dashboard.php
 ```
 
-### Middleware
+The `view()` function in `Route.php` handles path resolution and data extraction.
 
-Middleware provides a mechanism for filtering HTTP requests entering your application. For example, an `auth` middleware can verify the user is authenticated before they can access a route.
+<a name="models"></a>
+### Models & Database
 
-**Registering Middleware:**
-Middleware is registered in `index.php`.
+The framework includes a database abstraction layer supporting MySQL, SQLite, and PostgreSQL.
+
+**Database Factory:**
 ```php
-// index.php
-Route::registerMiddleware('auth', AuthMiddleware::class);
+// Create a database connection
+$db = DatabaseFactory::create('sqlite', ['database' => 'path/to/db.sqlite']);
 ```
 
-**Assigning Middleware to Routes:**
-You can assign middleware to a route using the `middleware()` method.
+**Query Builder (`App/Database/DatabaseQuery.php`):**
 ```php
-Route::get('/dashboard', function () {
-    // Only authenticated users can access this
-})->middleware('auth');
+$query = new DatabaseQuery($db);
+
+// Select
+$users = $query->select('users', '*', 'active = ?', [1]);
+
+// Insert
+$id = $query->insert('users', ['name' => 'John', 'email' => 'john@example.com']);
+
+// Update
+$query->update('users', ['name' => 'Jane'], 'id = ?', [1]);
+
+// Delete
+$query->delete('users', 'id = ?', [1]);
 ```
 
+**Note:** The User and Admin models are referenced in controllers but not implemented in the current codebase. You would need to create these models extending a base Model class with methods like `find()`, `findByEmail()`, `save()`, `delete()`.
+
+<a name="csrf-protection"></a>
 ### CSRF Protection
 
-The framework provides an easy way to protect your application from cross-site request forgery (CSRF) attacks.
+The framework provides built-in CSRF protection.
 
-1.  **Add the CSRF field to your form:**
-    Use the `csrf_field()` helper inside any `<form>` tag.
-    ```php
-    <form method="POST" action="/profile">
-        <?php echo App\Helper\Helper::csrf_field(); ?>
-        <!-- ... other form inputs ... -->
-        <button type="submit">Submit</button>
-    </form>
-    ```
-
-2.  **Verify the token:**
-    In your route handling the POST request, compare the submitted token with the one in the session.
-    ```php
-    use App\Helper\Helper;
-
-    Route::post('/profile', function () {
-        if (Helper::request('_token') !== Helper::csrf_token()) {
-            // Token mismatch, handle error
-            Helper::returnJson(['error' => 'Invalid CSRF token'], 419);
-            return;
-        }
-        // Process form data...
-    });
-    ```
-
-### Helper Functions
-
-The `App\Helper\Helper` class contains dozens of useful functions to make your life easier. Here are just a few examples.
-
-**`dd(...$args)`**
-Dump the given variable(s) and end the script. Perfect for debugging.
+**Add CSRF Token to Forms:**
 ```php
-dd($myVariable, $anotherVariable);
+<form method="POST" action="/login">
+    <?php echo Helper::csrf_field(); ?>
+    <!-- form fields -->
+</form>
 ```
 
-**`env(string $key, $default = null)`**
-Gets the value of an environment variable from your `.env` file.
+**Verify Token in Controller:**
 ```php
-$appName = Helper::env('APP_NAME', 'Comibyte Framework');
-```
-
-**`asset(string $path)`**
-Generate a URL for a public asset (CSS, JS, images).
-```php
-<link rel="stylesheet" href="<?php echo Helper::asset('css/app.css'); ?>">
-```
-
-**`session(string $key, $default = null)`**
-Get or set a session value.
-```php
-// Set a session value
-Helper::session('user_id', 123);
-
-// Get a session value
-$userId = Helper::session('user_id');
-```
-
-**`redirect(string $page)`**
-Redirect the user to another page.
-```php
-return Helper::redirect('/login');
-```
-
-**`sanitize(string $input)`**
-Sanitize user input to prevent XSS attacks.
-```php
-$cleanComment = Helper::sanitize($_POST['comment']);
-```
-
-**`auth()`**
-A shortcut to get the currently authenticated user.
-```php
-$currentUser = Helper::auth();
-if ($currentUser) {
-    echo "Hello, " . $currentUser->name;
+if (Helper::request('_token') !== Helper::csrf_token()) {
+    Helper::returnJson(['error' => 'Invalid CSRF token'], 419);
+    return;
 }
 ```
 
+The token is stored in the session and regenerated for each request.
+
+<a name="email"></a>
+### Email Service
+
+Email sending is handled by `App/Helper/EmailService.php` using PHPMailer.
+
+**Configuration in `.env`:**
+```ini
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=your-username
+MAIL_PASSWORD=your-password
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="Your App"
+```
+
+**Sending Emails:**
+```php
+$emailService = new EmailService();
+$result = $emailService->sendContactEmail($name, $email, $message);
+```
+
+<a name="helpers"></a>
+### Helper Functions
+
+The `App\Helper\Helper` class contains numerous utility functions:
+
+**Debugging:**
+- `dd(...$args)`: Dump and die
+- `Helper::dd($variable);`
+
+**Environment & Configuration:**
+- `env(string $key, $default = null)`: Get environment variable
+- `asset(string $path)`: Generate asset URL
+- `url(string $path)`: Generate full URL
+
+**Session & Request:**
+- `session(string $key, $default = null)`: Get/set session value
+- `old(string $key, $default = '')`: Get old input
+- `method()`: Get request method
+
+**Content Manipulation:**
+- `excerpt(string $html, int $length = 150, string $suffix = '...')`: Create text excerpt
+- `readingTime(string $content, int $wpm = 200)`: Estimate reading time
+- `slugify(string $string, string $separator = '-')`: Create URL slug
+
+**Paths:**
+- `base_path(string $path = '')`: Get project root path
+- `app_path(string $path = '')`: Get App directory path
+- `storage_path(string $path = '')`: Get storage directory path
+
+**Security:**
+- `csrf_field()`: Generate CSRF input field
+- `csrf_token()`: Get current CSRF token
+
+**Utilities:**
+- `redirect(string $page, int $seconds = 0)`: Redirect user
+- `returnJson(array $data, int $statusCode = 200)`: Return JSON response
+- `set_alert(string $type, string $message)`: Create Bootstrap alert
+- `array_get(array $array, string $key, $default = null)`: Get array value with dot notation
+
+<a name="examples"></a>
+## Usage Examples
+
+**Complete Login System:**
+```php
+// routes/web.php
+Route::get('/login', function () {
+    return view('login');
+})->middleware('guest');
+
+Route::post('/login', [HomeController::class, 'login']);
+
+// App/Controller/HomeController.php
+public function login()
+{
+    $email = Helper::sanitize(Helper::request('email'));
+    $password = Helper::request('password');
+
+    if (Helper::request('_token') !== Helper::csrf_token()) {
+        Helper::returnJson(['error' => 'Invalid CSRF token'], 419);
+        return;
+    }
+
+    $user = User::findByEmail($email);
+    if ($user && password_verify($password, $user->password)) {
+        Helper::session('user_id', $user->id);
+        Helper::returnJson(['success' => 'Login successful', 'redirect' => '/dashboard']);
+    } else {
+        Helper::returnJson(['error' => 'Invalid credentials'], 401);
+    }
+}
+```
+
+**API Endpoint with JSON Response:**
+```php
+Route::get('/api/users', function () {
+    $users = User::all(); // Assuming User model exists
+    Helper::returnJson(['users' => $users]);
+});
+```
+
+**Contact Form with Email:**
+```php
+Route::post('/contact', [HomeController::class, 'contact']);
+
+public function contact()
+{
+    $name = Helper::sanitize(Helper::request('name'));
+    $email = Helper::sanitize(Helper::request('email'));
+    $message = Helper::sanitize(Helper::request('message'));
+
+    if (Helper::request('_token') !== Helper::csrf_token()) {
+        Helper::returnJson(['error' => 'Invalid CSRF token'], 419);
+        return;
+    }
+
+    $emailService = new EmailService();
+    $result = $emailService->sendContactEmail($name, $email, $message);
+
+    if ($result) {
+        Helper::returnJson(['success' => 'Message sent successfully']);
+    } else {
+        Helper::returnJson(['error' => 'Failed to send message'], 500);
+    }
+}
+```
+
+<a name="contribute"></a>
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a pull request or open an issue for any bugs or feature requests.
 
+<a name="license"></a>
 ## License
 
-The Comibyte PHP Framework is open-source software. Feel free to use it and adapt it for your own projects.
-
+The Comibyte PHP Mini Framework is open-source software licensed under the MIT License. Feel free to use it and adapt it for your own projects.
