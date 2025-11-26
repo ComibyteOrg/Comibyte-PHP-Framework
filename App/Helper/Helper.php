@@ -342,16 +342,6 @@ class Helper
     }
 
     /**
-     * Get the current authenticated user.
-     *
-     * @return Admin|null
-     */
-    public static function auth(): ?Admin
-    {
-        return Admin::getCurrentLoggedInUser();
-    }
-
-    /**
      * Get an item from an array using "dot" notation.
      *
      * @param  array   $array

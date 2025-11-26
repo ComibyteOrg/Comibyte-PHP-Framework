@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Welcome to
+			{{ framework }}</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: #333;
+				line-height: 1.6;
+				padding: 20px;
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.container {
+				background: white;
+				border-radius: 10px;
+				box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+				overflow: hidden;
+				max-width: 800px;
+				width: 100%;
+			}
+
+			.header {
+				background: #4a5568;
+				color: white;
+				padding: 30px;
+				text-align: center;
+			}
+
+			.header h1 {
+				font-size: 2.5rem;
+				margin-bottom: 10px;
+			}
+
+			.header p {
+				font-size: 1.2rem;
+				opacity: 0.9;
+			}
+
+			.content {
+				padding: 30px;
+			}
+
+			.section {
+				margin-bottom: 30px;
+			}
+
+			.section h2 {
+				color: #4a5568;
+				margin-bottom: 15px;
+				padding-bottom: 10px;
+				border-bottom: 2px solid #e2e8f0;
+			}
+
+			.features-list,
+			.benefits-list {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+				gap: 15px;
+				list-style: none;
+			}
+
+			.feature-item,
+			.benefit-item {
+				background: #f7fafc;
+				padding: 15px;
+				border-radius: 5px;
+				border-left: 4px solid #667eea;
+				transition: transform 0.2s ease, box-shadow 0.2s ease;
+			}
+
+			.feature-item:hover,
+			.benefit-item:hover {
+				transform: translateY(-3px);
+				box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+			}
+
+			.cta {
+				text-align: center;
+				margin-top: 30px;
+				padding: 20px;
+				background: #ebf8ff;
+				border-radius: 5px;
+			}
+
+			.cta p {
+				margin-bottom: 15px;
+				font-size: 1.1rem;
+			}
+
+			.btn {
+				display: inline-block;
+				background: #667eea;
+				color: white;
+				padding: 12px 24px;
+				border-radius: 5px;
+				text-decoration: none;
+				font-weight: bold;
+				transition: background 0.2s ease;
+			}
+
+			.btn:hover {
+				background: #5a67d8;
+			}
+
+			.footer {
+				text-align: center;
+				padding: 20px;
+				background: #f7fafc;
+				color: #718096;
+				font-size: 0.9rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="header">
+				<h1>Welcome to
+					{{ framework }}</h1>
+				<p>A lightweight, modern PHP framework for rapid development</p>
+			</div>
+
+			<div class="content">
+				<div class="section">
+					<h2>Key Features</h2>
+					<ul class="features-list">
+						{% for feature in features %}
+							<li class="feature-item">{{ feature }}</li>
+						{% endfor %}
+					</ul>
+				</div>
+
+				<div class="section">
+					<h2>Benefits</h2>
+					<ul class="benefits-list">
+						{% for benefit in benefits %}
+							<li class="benefit-item">{{ benefit }}</li>
+						{% endfor %}
+					</ul>
+				</div>
+
+				<div class="cta">
+					<p>Ready to start building amazing applications?</p>
+					<a href="/docs" class="btn">View Documentation</a>
+				</div>
+			</div>
+
+			<div class="footer">
+				<p>Powered by
+					{{ framework }}
+					| PHP
+					{{ constant('PHP_VERSION') }}</p>
+			</div>
+		</div>
+	</body>
+</html>

@@ -29,7 +29,7 @@ This framework is inspired by the simplicity and elegance of frameworks like Lar
     - [Input Sanitization](#sanitize)
   - [Middleware](#middleware)
   - [Views](#views)
-  - [Models & Database](#models)
+  - [Models & Database](#models--database)
   - [CSRF Protection](#csrf-protection)
   - [Email Service](#email)
   - [Helper Functions](#helpers)
@@ -44,10 +44,9 @@ This framework is inspired by the simplicity and elegance of frameworks like Lar
 
 - **Elegant Routing Engine**: Define clean, simple routes with parameter support and middleware.
 - **Controller Support**: Organize your code with MVC-style controllers.
-- **Middleware System**: Protect your routes with authentication, guest-only, and custom middleware.
-- **Simple View Engine**: Easily render PHP views with data passing.
-- **Database Abstraction**: Support for MySQL, SQLite, and PostgreSQL with query builder.
-- **Rich Helper Library**: A comprehensive set of helper functions for common tasks.
+- **Middleware Support**: Protect your routes with middleware for authentication, logging, and more.
+- **Simple View Engine**: Easily render PHP views with data.
+- **Rich Helper Library**: A comprehensive set of helper functions to speed up common tasks.
 - **Environment Configuration**: Uses `.env` files for easy management of application configuration.
 - **CSRF Protection**: Built-in helpers to protect your forms from cross-site request forgery.
 - **Integrated Mailer**: A simple wrapper around PHPMailer to send emails easily.
@@ -71,7 +70,7 @@ This framework is inspired by the simplicity and elegance of frameworks like Lar
     cd comibyte-framework
     ```
 
-2.  **Install Dependencies:**
+2.  **Install dependencies:**
     This will install PHPMailer, DotEnv, and other necessary packages.
     ```bash
     composer install
@@ -134,9 +133,7 @@ Now, visit `http://localhost:8000` in your browser to see the welcome page!
 │   │   ├── SQLiteConnection.php    # SQLite database implementation
 │   │   └── db.sqlite               # SQLite database file
 │   ├── Helper/
-│   │   ├── CSRF.php                # CSRF token generation
-│   │   ├── EmailService.php        # Email sending service using PHPMailer
-│   │   └── Helper.php              # Core helper functions including sanitize
+│   │   └── Helper.php      # Core helper functions
 │   ├── Middleware/
 │   │   ├── AuthMiddleware.php      # Authentication middleware
 │   │   └── GuestMiddleware.php     # Guest-only middleware
@@ -145,9 +142,7 @@ Now, visit `http://localhost:8000` in your browser to see the welcome page!
 │   └── Router/
 │       └── Route.php               # The routing engine
 ├── Resources/
-│   ├── css/
-│   ├── js/
-│   └── views/                      # PHP view files
+│   └── views/              # Your view files (.php)
 │       └── home.php
 ├── routes/
 │   └── web.php                     # Web route definitions
@@ -367,7 +362,7 @@ Middleware is registered in `index.php` and applied to routes using the `middlew
 <a name="views"></a>
 ### Views
 
-Views are PHP files located in `Resources/views/`. They render HTML with embedded PHP.
+Views are simple PHP files located in the `Resources/views` directory. You can render a view using the `view()` function.
 
 **Rendering a View:**
 ```php
@@ -382,21 +377,23 @@ Route::get('/profile', function () {
     $user = ['name' => 'John Doe'];
     return view('profile', ['user' => $user]);
 });
+
+// In Resources/views/profile.php
+<h1>Welcome, <?php echo htmlspecialchars($user['name']); ?>!</h1>
 ```
 
-**Dot Notation for Subdirectories:**
+You can also use "dot" notation for views in subdirectories.
 ```php
-return view('admin.dashboard'); // Renders Resources/views/admin/dashboard.php
+// Renders Resources/views/admin/dashboard.php
+return view('admin.dashboard');
 ```
 
-The `view()` function in `Route.php` handles path resolution and data extraction.
+### Middleware
 
-<a name="models"></a>
-### Models & Database
+Middleware provides a mechanism for filtering HTTP requests entering your application. For example, an `auth` middleware can verify the user is authenticated before they can access a route.
 
-The framework includes a database abstraction layer supporting MySQL, SQLite, and PostgreSQL.
-
-**Database Factory:**
+**Registering Middleware:**
+Middleware is registered in `index.php`.
 ```php
 // Create a database connection
 $db = DatabaseFactory::create('sqlite', ['database' => 'path/to/db.sqlite']);
@@ -547,27 +544,15 @@ Route::get('/api/users', function () {
 
 **Contact Form with Email:**
 ```php
-Route::post('/contact', [HomeController::class, 'contact']);
+$cleanComment = Helper::sanitize($_POST['comment']);
+```
 
-public function contact()
-{
-    $name = Helper::sanitize(Helper::request('name'));
-    $email = Helper::sanitize(Helper::request('email'));
-    $message = Helper::sanitize(Helper::request('message'));
-
-    if (Helper::request('_token') !== Helper::csrf_token()) {
-        Helper::returnJson(['error' => 'Invalid CSRF token'], 419);
-        return;
-    }
-
-    $emailService = new EmailService();
-    $result = $emailService->sendContactEmail($name, $email, $message);
-
-    if ($result) {
-        Helper::returnJson(['success' => 'Message sent successfully']);
-    } else {
-        Helper::returnJson(['error' => 'Failed to send message'], 500);
-    }
+**`auth()`**
+A shortcut to get the currently authenticated user.
+```php
+$currentUser = Helper::auth();
+if ($currentUser) {
+    echo "Hello, " . $currentUser->name;
 }
 ```
 
@@ -579,4 +564,6 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 <a name="license"></a>
 ## License
 
-The Comibyte PHP Mini Framework is open-source software licensed under the MIT License. Feel free to use it and adapt it for your own projects.
+The Comibyte PHP Framework is open-source software. Feel free to use it and adapt it for your own projects.#   C o m i b y t e - P H P - F r a m e w o r k 
+ 
+ 

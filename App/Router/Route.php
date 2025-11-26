@@ -2,8 +2,9 @@
 
 namespace App\Router;
 
-class Route
+use App\Helper\TwigManager;
 
+class Route
 {
 
     private static $routes = [];
@@ -17,7 +18,6 @@ class Route
     // --- Configuration ---
 
     public static function setViewPath(string $path): void
-
     {
 
         self::$viewPath = rtrim($path, '/');
@@ -25,17 +25,20 @@ class Route
     }
 
     public static function registerMiddleware(string $alias, callable|string $handler): void
-
     {
 
         self::$middlewareAliases[$alias] = $handler;
 
     }
 
+    public static function getTwig()
+    {
+        return TwigManager::getInstance();
+    }
+
     // --- Route Definition ---
 
     private static function addRoute(string $method, string $path, $handler): self
-
     {
 
         self::$routes[] = [
@@ -57,7 +60,6 @@ class Route
     }
 
     public static function get(string $path, $handler): self
-
     {
 
         return self::addRoute('GET', $path, $handler);
@@ -65,7 +67,6 @@ class Route
     }
 
     public static function post(string $path, $handler): self
-
     {
 
         return self::addRoute('POST', $path, $handler);
@@ -75,7 +76,6 @@ class Route
     // --- Middleware Chaining ---
 
     public function middleware($middleware): self
-
     {
 
         if (self::$currentRouteIndex !== null && isset(self::$routes[self::$currentRouteIndex])) {
@@ -105,7 +105,6 @@ class Route
     // --- Dispatch ---
 
     public static function dispatch()
-
     {
 
         $requestMethod = $_SERVER['REQUEST_METHOD'];
@@ -118,7 +117,8 @@ class Route
 
         foreach (self::$routes as $route) {
 
-            if ($route['method'] !== $requestMethod && $requestMethod !== 'HEAD') continue;
+            if ($route['method'] !== $requestMethod && $requestMethod !== 'HEAD')
+                continue;
 
             $pattern = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>[^/]+)', $route['path']);
 
@@ -128,7 +128,8 @@ class Route
 
                 foreach ($matches as $key => $value) {
 
-                    if (is_string($key)) $params[$key] = $value;
+                    if (is_string($key))
+                        $params[$key] = $value;
 
                 }
 
@@ -239,7 +240,6 @@ class Route
     // --- Error Responses ---
 
     private static function errorResponse(int $code, string $message): void
-
     {
 
         http_response_code($code);
@@ -253,7 +253,6 @@ class Route
     }
 
     public static function getViewPath(): string
-
     {
 
         return self::$viewPath;
@@ -264,11 +263,7 @@ class Route
 
 // --- Global View Helper ---
 
-
-// --- Global View Helper ---
-
 if (!function_exists('view')) {
-
     /**
      * Render a view file.
      *
@@ -279,30 +274,69 @@ if (!function_exists('view')) {
      */
     function view(string $viewName, array $data = [], bool $return = false)
     {
-        $viewPath = Route::getViewPath();
+        // Check if we should use Twig (based on file extension or automatic detection)
+        $useTwig = false;
+        $templateName = $viewName;
 
-        if (empty($viewPath)) {
-            $msg = "<b>Error:</b> View path not configured.";
-            if ($return) return $msg;
-            echo $msg;
-            return;
+        // If view name already has twig extension, use Twig
+        if (strpos($viewName, '.twig') !== false) {
+            $useTwig = true;
+            $templateName = str_replace('.', '/', $viewName);
+        } else {
+            // Check if a Twig template exists for this view
+            $viewPath = Route::getViewPath();
+            $twigTemplate = $viewPath . '/' . str_replace('.', '/', $viewName) . '.twig';
+
+            if (file_exists($twigTemplate)) {
+                $useTwig = true;
+                $templateName = str_replace('.', '/', $viewName) . '.twig';
+            }
         }
 
-        $file = $viewPath . '/' . str_replace('.', '/', $viewName) . '.php';
-
-        if (file_exists($file)) {
-            extract($data);
-            ob_start();
-            require $file;
-            $output = ob_get_clean();
-            if ($return) return $output;
-            echo $output;
-            return;
+        if ($useTwig) {
+            // Use Twig template
+            try {
+                $output = \App\Helper\TwigManager::render($templateName, $data);
+                if ($return)
+                    return $output;
+                echo $output;
+                return;
+            } catch (\Exception $e) {
+                $msg = "<b>Error:</b> Twig template error: " . $e->getMessage();
+                if ($return)
+                    return $msg;
+                echo $msg;
+                return;
+            }
         } else {
-            $msg = "<b>Error:</b> View '{$viewName}' not found at {$file}.";
-            if ($return) return $msg;
-            echo $msg;
+            // Use traditional PHP templates
+            $viewPath = Route::getViewPath();
+
+            if (empty($viewPath)) {
+                $msg = "<b>Error:</b> View path not configured.";
+                if ($return)
+                    return $msg;
+                echo $msg;
+                return;
+            }
+
+            $file = $viewPath . '/' . str_replace('.', '/', $viewName) . '.php';
+
+            if (file_exists($file)) {
+                extract($data);
+                ob_start();
+                require $file;
+                $output = ob_get_clean();
+                if ($return)
+                    return $output;
+                echo $output;
+                return;
+            } else {
+                $msg = "<b>Error:</b> View '{$viewName}' not found at {$file}.";
+                if ($return)
+                    return $msg;
+                echo $msg;
+            }
         }
     }
-
 }

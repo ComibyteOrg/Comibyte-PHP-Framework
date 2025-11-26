@@ -1,8 +1,7 @@
 <?php
 use App\Router\Route;
+use App\Controller\WelcomeController;
 use function App\Router\view;
 
 
-Route::get("/", function () {
-    return view("home");
-});
+Route::get("/", [WelcomeController::class, 'index']);

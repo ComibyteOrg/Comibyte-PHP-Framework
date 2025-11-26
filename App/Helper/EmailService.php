@@ -11,6 +11,7 @@ class EmailService
     private $fromEmail;
     private $fromName;
 
+
     public function __construct()
     {
         $this->mailer = new PHPMailer(true);
