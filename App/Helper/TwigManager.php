@@ -5,6 +5,8 @@ namespace App\Helper;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
+use App\Helper\Auth;
 use App\Router\Route;
 
 class TwigManager
@@ -28,6 +30,11 @@ class TwigManager
 
             self::$twig->addFilter(new TwigFilter('limit', function ($array, $limit) {
                 return array_slice($array, 0, $limit);
+            }));
+
+            // Add global auth function
+            self::$twig->addFunction(new TwigFunction('auth', function () {
+                return new Auth();
             }));
         }
 
