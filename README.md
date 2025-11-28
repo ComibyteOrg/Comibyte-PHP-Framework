@@ -590,7 +590,6 @@ $query->delete('users', 'id = ?', [1]);
 
 
 ## 🛠️ Available ORM Methods in DB Helper Class
-
 ### 🔍 select()
 
 Select multiple rows.
@@ -599,9 +598,7 @@ Select multiple rows.
 DB::select('users', ['role' => 'admin']);
 ```
 
-Returns **array of objects**.
-
----
+## Returns **array of objects**.
 
 ### 🔎 find()
 
@@ -611,7 +608,45 @@ Find a single row.
 DB::find('users', ['id' => 5]);
 ```
 
-Returns **one object** or `null`.
+## Returns **one object** or `null`.
+
+### 🔎 first()
+
+Return the first matching row.
+
+```php
+DB::first('users', ['status' => 'active']);
+```
+
+---
+
+### 📄 all()
+
+Return all rows from a table.
+
+```php
+DB::all('users');
+```
+
+---
+
+### 🔢 count()
+
+Count matching rows.
+
+```php
+DB::count('users', ['role' => 'admin']);
+```
+
+---
+
+### 📌 exists()
+
+Check if a record exists.
+
+```php
+DB::exists('users', ['email' => 'dev@example.com']);
+```
 
 ---
 
@@ -620,15 +655,10 @@ Returns **one object** or `null`.
 Insert a new record.
 
 ```php
-DB::insert('users', [
-    'name' => 'John',
-    'email' => 'john@email.com'
-]);
+DB::insert('users', ['name' => 'John', 'email' => 'john@email.com']);
 ```
 
-Returns **insert ID**.
-
----
+## Returns **insert ID**.
 
 ### 📝 update()
 
@@ -638,9 +668,7 @@ Update a record.
 DB::update('users', ['name' => 'New'], ['id' => 3]);
 ```
 
-Returns **number of affected rows**.
-
----
+## Returns **affected rows**.
 
 ### ❌ delete()
 
@@ -650,7 +678,73 @@ Delete rows.
 DB::delete('users', ['id' => 10]);
 ```
 
-Returns **number of deleted rows**.
+---
+
+### 🔍 where()
+
+Flexible querying with multiple conditions.
+
+```php
+DB::where('users', ['age >' => 18, 'status' => 'active']);
+```
+
+---
+
+### 🔍 whereIn()
+
+```php
+DB::whereIn('users', 'id', [1,2,3]);
+```
+
+---
+
+### 🔍 whereLike()
+
+```php
+DB::whereLike('users', 'name', '%john%');
+```
+
+---
+
+### 📄 orderBy()
+
+```php
+DB::orderBy('users', 'created_at DESC');
+```
+
+---
+
+### ⏳ limit()
+
+```php
+DB::limit('users', 10);
+```
+
+---
+
+### 📑 paginate()
+
+```php
+DB::paginate('users', 10, 2); // limit 10 offset page 2
+```
+
+---
+
+### 🔗 join()
+
+```php
+DB::join('users u', 'posts p', 'u.id = p.user_id')->select(...);
+```
+
+---
+
+### 🔐 Transactions
+
+```php
+DB::beginTransaction();
+DB::commit();
+DB::rollback();
+```
 
 ---
 
@@ -662,35 +756,41 @@ Execute any SQL query.
 DB::raw("SELECT COUNT(*) FROM users");
 ```
 
-Returns **PDOStatement result**.
-
 ---
 
 ## 📘 Usage Examples
 
-### Example: Creating a User
+### Create a User
 
 ```php
-DB::insert('users', [
-    'username' => 'comibyte',
-    'email' => 'dev@example.com',
-    'password' => 'hashed'
-]);
+DB::insert('users', [ 'username' => 'comibyte', 'email' => 'dev@example.com', 'password' => 'hashed' ]);
 ```
 
-### Example: Updating User
+### Update User
 
 ```php
 DB::update('users', ['email' => 'new@gmail.com'], ['id' => 4]);
 ```
 
-### Example: Getting All Users
+### Get All Admins
 
 ```php
 $admins = DB::select('users', ['role' => 'admin']);
 ```
 
-### Example: Raw Query
+### Count Users
+
+```php
+$count = DB::count('users');
+```
+
+### Paginate
+
+```php
+$users = DB::paginate('users', 20, 1);
+```
+
+### Raw Query
 
 ```php
 DB::raw("DELETE FROM logs WHERE created_at < NOW() - INTERVAL 30 DAY");
@@ -699,6 +799,16 @@ DB::raw("DELETE FROM logs WHERE created_at < NOW() - INTERVAL 30 DAY");
 ---
 
 ## ⚠️ Error Handling
+
+All methods wrap PDO errors inside `PDOException`.
+
+```php
+try {
+    $user = DB::find('users', ['id' => 1]);
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
+```
 
 All methods wrap PDO errors inside `PDOException`.
 
