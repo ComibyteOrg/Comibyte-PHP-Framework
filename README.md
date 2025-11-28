@@ -93,6 +93,7 @@ To use this framework, you need:
 - **Composer** - A tool for managing PHP dependencies (libraries/packages)
 - **A local web server** - Like Apache, Nginx, or PHP's built-in server
 - **A database** - MySQL, SQLite, or PostgreSQL (optional, depending on your needs)
+- **Twig Language 2** - A VSCode extension for writing HTML inside of Twig
 
 Don't worry if you're not familiar with these yet - we'll explain them as we go!
 
