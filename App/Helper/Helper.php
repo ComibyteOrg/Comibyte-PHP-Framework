@@ -414,4 +414,23 @@ class Helper
     {
         return strtoupper($_SERVER['REQUEST_METHOD']);
     }
+
+    public static function logout()
+    {
+        unset($_SESSION['user_id']);
+        if (isset($_COOKIE['remember_me'])) {
+            unset($_COOKIE['remember_me']);
+            setcookie('remember_me', '', time() - 3600, '/');
+        }
+    }
+
+    public static function check()
+    {
+        return isset($_SESSION['user_id']) || isset($_COOKIE['remember_me']);
+    }
+
+    public static function auth()
+    {
+        return $_SESSION['user_id'] ?? $_COOKIE['remember_me'] ?? null;
+    }
 }
