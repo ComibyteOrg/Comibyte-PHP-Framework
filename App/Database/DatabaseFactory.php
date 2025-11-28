@@ -18,7 +18,8 @@ class DatabaseFactory
                 );
 
             case 'sqlite':
-                return new SQLiteConnection($config['DB_PATH']);
+                $path = $config['DB_PATH'] ?? __DIR__ . '/../../db.sqlite';
+                return new SQLiteConnection($path);
 
             case 'pgsql':
             case 'postgresql':
