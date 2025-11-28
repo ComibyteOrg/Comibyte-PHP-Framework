@@ -3,12 +3,14 @@ namespace App\Database;
 
 use Dotenv\Dotenv;
 
-class Connect {
+class Connect
+{
     public $connection;
     private $database;
 
-    public function __construct() {
-        $dotenv = Dotenv::createImmutable(__DIR__);
+    public function __construct()
+    {
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
         $dotenv->load();
 
         try {
@@ -19,7 +21,8 @@ class Connect {
         }
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         if ($this->database) {
             $this->database->close();
         }
